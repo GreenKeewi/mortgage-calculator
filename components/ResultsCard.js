@@ -2,16 +2,9 @@ function ResultsCard({ results }) {
     try {
       if (results.error) {
         return (
-          <div className="card p-6" data-name="results-card" data-file="components/ResultsCard.js">
-            <div className="text-center py-8">
-              <div className="w-12 h-12 mx-auto mb-4 rounded-full bg-red-100 flex items-center justify-center">
-                <div className="icon-alert-circle text-xl text-red-600"></div>
-              </div>
-              <h3 className="text-lg font-semibold mb-2" style={{color: 'hsl(var(--foreground))'}}>
-                Validation Error
-              </h3>
-              <p className="text-red-600">{results.error}</p>
-            </div>
+          <div role="alert" className="alert alert-error">
+            <svg xmlns="http://www.w3.org/2000/svg" className="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+            <span>{results.error}</span>
           </div>
         );
       }
@@ -26,87 +19,67 @@ function ResultsCard({ results }) {
       };
   
       return (
-        <div className="card p-6" data-name="results-card" data-file="components/ResultsCard.js">
-          <h2 className="text-2xl font-semibold mb-6" style={{color: 'hsl(var(--card-foreground))'}}>
-            Mortgage Breakdown
-          </h2>
-          
-          <div className="space-y-6">
-            {/* Main Payment */}
-            <div className="rounded-lg p-4" style={{backgroundColor: 'hsl(var(--primary) / 0.1)'}}>
-              <div className="text-center">
-                <p className="text-sm mb-1" style={{color: 'hsl(var(--muted-foreground))'}}>
-                  {getFrequencyLabel(results.paymentFrequency)} Payment
-                </p>
-                <p className="text-3xl font-bold" style={{color: 'hsl(var(--primary))'}}>
-                  {results.formatted.payment}
-                </p>
+        <div className="card bg-base-100 shadow-xl">
+          <div className="card-body">
+            <h2 className="card-title text-2xl mb-4">Mortgage Breakdown</h2>
+            
+            <div className="stats stats-vertical shadow-inner bg-base-200">
+              <div className="stat">
+                <div className="stat-title"> {getFrequencyLabel(results.paymentFrequency)} Payment</div>
+                <div className="stat-value text-primary">{results.formatted.payment}</div>
               </div>
             </div>
-  
-            {/* Key Details */}
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <p className="text-sm" style={{color: 'hsl(var(--muted-foreground))'}}>Home Price</p>
-                <p className="text-lg font-semibold">{results.formatted.homePrice}</p>
-              </div>
-              <div>
-                <p className="text-sm" style={{color: 'hsl(var(--muted-foreground))'}}>Down Payment</p>
-                <p className="text-lg font-semibold">
-                  {results.formatted.downPaymentAmount}
-                  <span className="text-sm ml-1" style={{color: 'hsl(var(--muted-foreground))'}}>
-                    ({results.downPaymentPercentage}%)
-                  </span>
-                </p>
-              </div>
-            </div>
-  
-            <hr style={{borderColor: 'hsl(var(--border))'}} />
-  
-            {/* Mortgage Details */}
-            <div className="space-y-4">
-              <div>
-                <p className="text-sm" style={{color: 'hsl(var(--muted-foreground))'}}>Mortgage Amount</p>
-                <p className="text-lg font-semibold">{results.formatted.mortgageAmount}</p>
-              </div>
-              
-              {results.cmhcInsurance > 0 && (
-                <div>
-                  <p className="text-sm" style={{color: 'hsl(var(--muted-foreground))'}}>CMHC Insurance Premium</p>
-                  <p className="text-lg font-semibold">{results.formatted.cmhcInsurance}</p>
+
+            <div className="flex flex-wrap -mx-2 mt-4">
+                <div className="w-full md:w-1/2 px-2 mb-4">
+                    <div className="stat">
+                        <div className="stat-title">Home Price</div>
+                        <div className="stat-value text-lg">{results.formatted.homePrice}</div>
+                    </div>
                 </div>
-              )}
+                <div className="w-full md:w-1/2 px-2 mb-4">
+                    <div className="stat">
+                        <div className="stat-title">Down Payment</div>
+                        <div className="stat-value text-lg">{results.formatted.downPaymentAmount}</div>
+                        <div className="stat-desc">{results.downPaymentPercentage}%</div>
+                    </div>
+                </div>
             </div>
-  
-            <hr style={{borderColor: 'hsl(var(--border))'}} />
-  
-            {/* Summary */}
-            <div className="space-y-4">
-              <div>
-                <p className="text-sm" style={{color: 'hsl(var(--muted-foreground))'}}>Total Interest</p>
-                <p className="text-lg font-semibold">{results.formatted.totalInterest}</p>
-              </div>
-              <div className="rounded-lg p-4" style={{backgroundColor: 'hsl(var(--secondary))'}}>
-                <p className="text-sm mb-1" style={{color: 'hsl(var(--muted-foreground))'}}>Total Cost</p>
-                <p className="text-xl font-bold" style={{color: 'hsl(var(--foreground))'}}>
-                  {results.formatted.totalCost}
-                </p>
-              </div>
+            
+            <div className="divider"></div>
+
+            <div className="space-y-2">
+                <div className="flex justify-between">
+                    <span className="font-medium">Mortgage Amount</span>
+                    <span className="font-mono">{results.formatted.mortgageAmount}</span>
+                </div>
+                {results.cmhcInsurance > 0 && (
+                    <div className="flex justify-between">
+                        <span className="font-medium">CMHC Insurance</span>
+                        <span className="font-mono">{results.formatted.cmhcInsurance}</span>
+                    </div>
+                )}
             </div>
-  
-            {/* CMHC Info */}
+
+            <div className="divider"></div>
+
+            <div className="stats stats-vertical shadow-inner bg-base-200">
+                <div className="stat">
+                    <div className="stat-title">Total Interest</div>
+                    <div className="stat-value">{results.formatted.totalInterest}</div>
+                </div>
+                <div className="stat">
+                    <div className="stat-title">Total Cost</div>
+                    <div className="stat-value">{results.formatted.totalCost}</div>
+                </div>
+            </div>
+
             {results.downPaymentPercentage < 20 && (
-              <div className="bg-blue-50 border-l-4 border-blue-400 p-4 rounded">
-                <div className="flex">
-                  <div className="w-5 h-5 mr-3 mt-0.5">
-                    <div className="icon-info text-lg text-blue-600"></div>
-                  </div>
-                  <div>
-                    <p className="text-sm text-blue-800">
-                      <strong>CMHC Insurance Required:</strong> With less than 20% down payment, 
-                      CMHC mortgage insurance of {results.formatted.cmhcInsurance} is added to protect the lender.
-                    </p>
-                  </div>
+              <div role="alert" className="alert alert-info mt-4">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" className="stroke-current shrink-0 w-6 h-6"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                <div>
+                  <h3 className="font-bold">CMHC Insurance Required</h3>
+                  <div className="text-xs">With less than 20% down payment, CMHC mortgage insurance of {results.formatted.cmhcInsurance} is added to protect the lender.</div>
                 </div>
               </div>
             )}
